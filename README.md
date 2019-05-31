@@ -1,3 +1,10 @@
+## To run this app you need:
+In the root folder type in terminal `yarn install`
+Then type `node api.js`
+Last step - open one more terminal in the same folder and type `yarn start`
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
