@@ -1,14 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import City from './City';
 import {connect} from 'react-redux';
-
+import {deleteCity, refreshCity} from '../store/actions/actionCreators';
 function CityList(props) {
-
-
-  useEffect(()=>{
-
-  })
-
   return (
     <div className='city-list'>
         {props.cities.map(city=>{
@@ -19,7 +13,9 @@ function CityList(props) {
                     temperature={city.temperature} 
                     city={city.name}
                     id={city.id}
-                    key={city.id}/>
+                    key={city.id}
+                    triggerDeleteCity={props.triggerDeleteCity}
+                    triggerRefreshCity={props.triggerRefreshCity}/>
             )
         })}
     </div>
@@ -31,7 +27,12 @@ const mapStateToProps = state=>{
         cities: state.cities
     }
 }
+const mapDispatchToProps = dispatch=>{
+    return {
+        triggerDeleteCity: id=>dispatch(deleteCity(id)),
+        triggerRefreshCity: city=>dispatch(refreshCity(city))
+    }
+}
 
 
-
-export default connect(mapStateToProps)(CityList);
+export default connect(mapStateToProps,mapDispatchToProps)(CityList);

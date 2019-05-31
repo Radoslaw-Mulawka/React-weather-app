@@ -8,13 +8,12 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
-
 import {connect} from 'react-redux';
 import {addCity} from '../store/actions/actionCreators';
 import {getCitiesSuggestions} from '../store/actions/actionCreators';
 
 
-//////////////////////////////////
+
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
 
@@ -34,7 +33,7 @@ function renderInputComponent(inputProps) {
     />
   );
 }
-//////////////////////////////////////
+
 function renderSuggestion(suggestion, { query, isHighlighted }) {
   const matches = match(suggestion.label, query);
   const parts = parse(suggestion.label, matches);
@@ -51,7 +50,7 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
     </MenuItem>
   );
 }
-///////////////////////////////////////
+
 function getSuggestions(value, citiesSuggestions) {
 
   const inputValue = deburr(value.trim()).toLowerCase();
@@ -65,11 +64,11 @@ function getSuggestions(value, citiesSuggestions) {
         return keep;
       });
 }
-/////////////////////////////////////////
+
 function getSuggestionValue(suggestion) {
   return suggestion.label;
 }
-//////////////////////////////////////
+
 function IntegrationAutosuggest(props) {
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -111,36 +110,52 @@ function IntegrationAutosuggest(props) {
   };
 
   return (
-    <div className={classes.root}>
-      <Autosuggest
-        {...autosuggestProps}
-        inputProps={{
-          classes,
-          placeholder: 'City',
-          value: state.single,
-          id: state.id,
-          onChange: handleChange('single'),
-        }}
-        theme={{
-          container: classes.container,
-          suggestionsContainerOpen: classes.suggestionsContainerOpen,
-          suggestionsList: classes.suggestionsList,
-          suggestion: classes.suggestion,
-        }}
-        renderSuggestionsContainer={options => (
-          <Paper {...options.containerProps} square>
-            {options.children}
-          </Paper>
-        )}
-      />
-      <Icon className={classes.icon} onClick={()=>{console.log(state); props.addCity({id: state.id, name: state.single})}}>add_circle</Icon>
-    </div>
+    <React.Fragment>
+      <div className={classes.root}>
+        <Autosuggest
+          {...autosuggestProps}
+          inputProps={{
+            classes,
+            placeholder: 'City',
+            value: state.single,
+            id: state.id,
+            onChange: handleChange('single'),
+          }}
+          theme={{
+            container: classes.container,
+            suggestionsContainerOpen: classes.suggestionsContainerOpen,
+            suggestionsList: classes.suggestionsList,
+            suggestion: classes.suggestion,
+          }}
+          renderSuggestionsContainer={options => (
+            <Paper {...options.containerProps} square>
+              {options.children}
+            </Paper>
+          )}
+        />
+        <Icon className={classes.icon} onClick={()=>{
+                if(props.cities.some(item=>item.id == state.id) || state.id == null){
+                  setState({
+                    ...state
+                  })
+                  return false;
+                }
+                else {
+                  props.addCity({id: state.id, name: state.single});
+                  setState({
+                    single: '',
+                    id: null
+                  })
+                }
+        }}>
+          add_circle
+        </Icon>
+
+      </div>
+    </React.Fragment>
   );
 }
 
-
-
-/////////////////////////////////////////
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -167,9 +182,6 @@ const useStyles = makeStyles(theme => ({
     height: theme.spacing(2),
   },
 }));
-/////////////////////////////////////
-
-
 
 
 
@@ -178,7 +190,8 @@ const useStyles = makeStyles(theme => ({
 
 const mapStateToProps = state=>{
     return {
-        citiesSuggestions: state.citiesSuggestions
+        citiesSuggestions: state.citiesSuggestions,
+        cities: state.cities
     }
 }
 

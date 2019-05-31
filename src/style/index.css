@@ -2,7 +2,8 @@
   display: flex;
   align-items: center;
   max-width: 550px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  position: relative; }
   .makeStyles-root-1 .makeStyles-container-2 {
     width: 100%; }
   .makeStyles-root-1 span.material-icons:last-child {
@@ -51,5 +52,14 @@
       color: red; }
   .city__name {
     padding: 10px; }
+
+.alert {
+  padding: 10px 20px;
+  position: absolute;
+  bottom: -50px;
+  border: 1px solid #f5c3c3;
+  border-radius: 5px;
+  color: white;
+  background-color: #e0a5a5; }
 
 /*# sourceMappingURL=index.css.map */
